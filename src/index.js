@@ -1,35 +1,29 @@
-import express from "express";
-/*import { ApolloServer,PubSub } from "apollo-server-express";
-import { PubSub } from 'graphql-subscriptions';*/
-const { ApolloServer, PubSub, gql } = require('apollo-server');
-
+const http = require("http");
+const { ApolloServer, PubSub } = require("apollo-server-express");
+const express = require("express");
 import { resolvers } from "./resolvers";
 import { typeDefs } from "./typeDefs";
-export const pubsub = new PubSub()
+export const pubsub = new PubSub();
 import connectDB from "../Connection/Connexion";
-const startApolloServer = async () => {
-  //const app = express();
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    subscriptions: {
-      path: '/subscriptions',
-      onConnect: (connectionParams, webSocket, context) => {
-        console.log('Client connected');
-      },
-      onDisconnect: (webSocket, context) => {
-        console.log('Client disconnected')
-      },
-    },
-  });
-  //server.applyMiddleware({ app });
-  connectDB();
 
-  server.listen({ port: 4000 }, () =>{
-    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-    
-  }
-   
+async function startApolloServer() {
+  const PORT = 4000;
+  const app = express();
+  const server = new ApolloServer({ typeDefs, resolvers });
+  await server.start();
+  server.applyMiddleware({ app });
+  connectDB();
+  const httpServer = http.createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+
+  // Make sure to call listen on httpServer, NOT on app.
+  await new Promise((resolve) => httpServer.listen(PORT, resolve));
+  console.log(
+    `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`
   );
-};
+  console.log(
+    `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
+  );
+  return { server, app, httpServer };
+}
 startApolloServer();
