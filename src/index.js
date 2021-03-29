@@ -1,8 +1,8 @@
 const http = require("http");
 const { ApolloServer, PubSub } = require("apollo-server-express");
 const express = require("express");
-import { resolvers } from "./resolvers";
-import { typeDefs } from "./typeDefs";
+import { resolvers } from "./resolvers/resolvers";
+import { typeDefs } from "./schema/typeDefs";
 export const pubsub = new PubSub();
 import connectDB from "../Connection/Connexion";
 
