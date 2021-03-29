@@ -1,11 +1,11 @@
-import { pubsub } from "./index"; 
-import { Problem } from "./models/Problem";
-import { PROBLEM_CREATED } from "./constants";
+import { pubsub } from "../index"; 
+import { Problem } from "../models/Problem";
+import { PROBLEM_CREATED } from "../constants/constants";
 import {
   getAllProblems,
   GetAllProblemsInput,
   createProblem,
-} from "./controllers/problemContoller";
+} from "../controllers/problemContoller";
 
 export const resolvers = {
   Subscription: {

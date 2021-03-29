@@ -1,6 +1,6 @@
 import { Problem } from "../models/Problem";
 
-import { PROBLEM_CREATED } from "../constants";
+import { PROBLEM_CREATED } from "../constants/constants";
 import { pubsub } from "../index";
 
 // Create a new problem from the given input
