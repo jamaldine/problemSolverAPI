@@ -7,7 +7,6 @@ const Schema = new mongoose.Schema(
     email: String,
     password: String,
     avatar: String,
-    
   },
   { timestamps: true }
 );
