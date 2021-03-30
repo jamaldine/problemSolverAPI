@@ -1,6 +1,4 @@
 import { pubsub } from "../index";
-import { Problem } from "../models/Problem";
-
 import { PROBLEM_CREATED } from "../constants/constants";
 import {
   getAllProblems,
@@ -9,7 +7,7 @@ import {
 } from "../controllers/problemContoller";
 
 export const resolvers = {
- Subscription: {
+  Subscription: {
     ProblemCreated: {
       // Additional event labels can be passed to asyncIterator creation
       subscribe: () => pubsub.asyncIterator([PROBLEM_CREATED]),
@@ -24,10 +22,3 @@ export const resolvers = {
       await createProblem({ title, description, media }),
   },
 };
-
-//problems: () => Problem.find(),
-/*CreateProblem: async (_, { title, description, media }) => {
-      const aproblem = new Problem({ title, description, media });
-      await aproblem.save();
-      return aproblem;
-    },*/

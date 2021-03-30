@@ -1,7 +1,6 @@
 const { AccountsServer } = require("@accounts/server");
 const { AccountsPassword } = require("@accounts/password");
 const { AccountsModule } = require("@accounts/graphql-api");
-
 const http = require("http");
 const { ApolloServer, PubSub } = require("apollo-server-express");
 const { Mongo } = require("@accounts/mongo");
@@ -11,12 +10,11 @@ const {
   mergeTypeDefs,
   mergeResolvers,
 } = require("@graphql-toolkit/schema-merging");
-
 const express = require("express");
+
 import { resolvers } from "./resolvers/resolvers";
 import { typeDefs } from "./schema/typeDefs";
 export const pubsub = new PubSub();
-import connectDB from "../Connection/Connexion";
 
 async function startApolloServer() {
   const PORT = 4000;
@@ -64,10 +62,8 @@ async function startApolloServer() {
     context: accountsGraphQL.context,
   });
 
-  //const server = new ApolloServer({ typeDefs, resolvers });
   await server.start();
   server.applyMiddleware({ app });
-  //connectDB();
   const httpServer = http.createServer(app);
   server.installSubscriptionHandlers(httpServer);
 

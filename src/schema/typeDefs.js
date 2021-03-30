@@ -1,5 +1,4 @@
 import { gql } from "apollo-server-express";
-//This is the schema:
 export const typeDefs = gql`
   type Problem {
     id: ID!
