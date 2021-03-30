@@ -18,6 +18,12 @@
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "@accounts/graphql-api": "^0.31.1",
+    "@accounts/mongo": "^0.31.1",
+    "@accounts/password": "^0.31.1",
+    "@accounts/server": "^0.31.1",
+    "@graphql-modules/core": "^0.7.17",
+    "@graphql-toolkit/schema-merging": "^0.10.7",
     "apollo-server": "^2.21.1",
     "apollo-server-express": "^2.22.1",
     "body-parser": "^1.19.0",

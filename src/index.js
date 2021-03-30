@@ -1,5 +1,17 @@
+const { AccountsServer } = require("@accounts/server");
+const { AccountsPassword } = require("@accounts/password");
+const { AccountsModule } = require("@accounts/graphql-api");
+
 const http = require("http");
 const { ApolloServer, PubSub } = require("apollo-server-express");
+const { Mongo } = require("@accounts/mongo");
+const mongoose = require("mongoose");
+const { makeExecutableSchema } = require("apollo-server");
+const {
+  mergeTypeDefs,
+  mergeResolvers,
+} = require("@graphql-toolkit/schema-merging");
+
 const express = require("express");
 import { resolvers } from "./resolvers/resolvers";
 import { typeDefs } from "./schema/typeDefs";
@@ -9,10 +21,53 @@ import connectDB from "../Connection/Connexion";
 async function startApolloServer() {
   const PORT = 4000;
   const app = express();
-  const server = new ApolloServer({ typeDefs, resolvers });
+
+  await mongoose.connect("mongodb://localhost:27017/problemSolver", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+
+  const accountsMongo = new Mongo(mongoose.connection);
+
+  const accountsPassword = new AccountsPassword({
+    // You can customise the behavior of the password service by providing some options
+  });
+
+  const accountsServer = new AccountsServer(
+    {
+      // We link the mongo adapter we created in the previous step to the server
+      db: accountsMongo,
+      // Replace this value with a strong random secret
+      tokenSecret: "my-super-random-secret",
+    },
+    {
+      // We pass a list of services to the server, in this example we just use the password service
+      password: accountsPassword,
+    }
+  );
+
+  // We generate the accounts-js GraphQL module
+  const accountsGraphQL = AccountsModule.forRoot({ accountsServer });
+
+  // A new schema is created combining our schema and the accounts-js schema
+  const schema = makeExecutableSchema({
+    typeDefs: mergeTypeDefs([typeDefs, accountsGraphQL.typeDefs]),
+    resolvers: mergeResolvers([accountsGraphQL.resolvers, resolvers]),
+    schemaDirectives: {
+      ...accountsGraphQL.schemaDirectives,
+    },
+  });
+
+  // When we instantiate our Apollo server we use the schema and context properties
+  const server = new ApolloServer({
+    schema,
+    context: accountsGraphQL.context,
+  });
+
+  //const server = new ApolloServer({ typeDefs, resolvers });
   await server.start();
   server.applyMiddleware({ app });
-  connectDB();
+  //connectDB();
   const httpServer = http.createServer(app);
   server.installSubscriptionHandlers(httpServer);
 

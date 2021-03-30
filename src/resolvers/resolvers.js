@@ -16,7 +16,7 @@ import {
 } from "../controllers/solverController";
 
 export const resolvers = {
-  Subscription: {
+ Subscription: {
     ProblemCreated: {
       // Additional event labels can be passed to asyncIterator creation
       subscribe: () => pubsub.asyncIterator([PROBLEM_CREATED]),
