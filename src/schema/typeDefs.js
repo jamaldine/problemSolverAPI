@@ -7,7 +7,7 @@ export const typeDefs = gql`
     media: String
   }
 
-  # New subscriptions type
+  # New subscriptions type newProblem
   type Subscription {
     ProblemCreated: Problem
   }

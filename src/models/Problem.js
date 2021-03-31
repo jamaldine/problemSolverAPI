@@ -9,4 +9,8 @@ const Schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Problem = mongoose.model("Problem", Schema);
+const Problem = mongoose.model("Problem", Schema);
+
+module.exports = {
+  Problem,
+};

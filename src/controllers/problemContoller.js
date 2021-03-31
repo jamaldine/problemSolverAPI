@@ -3,7 +3,7 @@ import { Problem } from "../models/Problem";
 import { PROBLEM_CREATED } from "../constants/constants";
 import { pubsub } from "../index";
 
-export async function createProblem({ title, description, media }) {
+ async function createProblem({ title, description, media }) {
   const problem = await Problem.create({
     title,
     description,
@@ -19,11 +19,11 @@ export async function createProblem({ title, description, media }) {
   return problem;
 }
 
-export const GetAllProblemsInput = {
+ const GetAllProblemsInput = {
   limit: Number,
 };
 
-export function getAllProblems({ limit }) {
+ function getAllProblems({ limit }) {
   return Problem.find({})
     .limit(limit ? limit : 0)
     .then((data) => data)
@@ -31,3 +31,8 @@ export function getAllProblems({ limit }) {
       throw error;
     });
 }
+module.exports = {
+  createProblem,
+  GetAllProblemsInput,
+  getAllProblems,
+};

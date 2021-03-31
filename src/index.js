@@ -59,7 +59,16 @@ async function startApolloServer() {
   // When we instantiate our Apollo server we use the schema and context properties
   const server = new ApolloServer({
     schema,
-    context: accountsGraphQL.context,
+    //context: accountsGraphQL.context,
+    context: async (session) => {
+      if (!session.req) {
+        const reqLike = {
+          headers: session.connection.context,
+        };
+        return accountsGraphQL.context(reqLike);
+      }
+      return accountsGraphQL.context(session);
+    },
   });
 
   await server.start();
