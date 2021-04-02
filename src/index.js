@@ -11,6 +11,7 @@ const {
   mergeResolvers,
 } = require("@graphql-toolkit/schema-merging");
 const express = require("express");
+const cors = require("cors");
 
 import { resolvers } from "./resolvers/resolvers";
 import { typeDefs } from "./schema/typeDefs";
@@ -19,7 +20,7 @@ export const pubsub = new PubSub();
 async function startApolloServer() {
   const PORT = 4000;
   const app = express();
-
+  app.use(cors()) 
   await mongoose.connect("mongodb://localhost:27017/problemSolver", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
